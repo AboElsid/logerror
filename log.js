@@ -1,20 +1,4 @@
-// Initialize Firebase with your config
-const firebaseConfig = {
-  apiKey: "AIzaSyBZZj1H-hCWAtUTnk_Ny2J_ibpusuiZ8xk",
-  authDomain: "arab-flaqis-481d2.firebaseapp.com",
-  databaseURL: "https://arab-flaqis-default-rtdb.firebaseio.com",
-  projectId: "arab-flaqis",
-  storageBucket: "arab-flaqis.appspot.com",
-  messagingSenderId: "808804064725",
-  appId: "1:808804064725:web:a1783fde96e1d5bd13f15c",
-  measurementId: "G-5JBR9S13ZM"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-// Reference to your Firebase Realtime Database
-const dbRef = firebase.database().ref();
-
+<script>
 // Replace with your Discord webhook URL
 var discordWebhookUrl = 'https://discord.com/api/webhooks/1257917892608131123/PY5PDPSgAG6PeInl8gcE-SjAJxIOL8jExfdFNbggTlSfZJCmnpmy5B5KCIgL0o5HLPzy';
 
@@ -30,19 +14,30 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error fetching visitor IP:', error));
 
-    // Increment visit count in Firebase
-    dbRef.child('totalVisits').transaction(function(currentCount) {
-        return (currentCount || 0) + 1;
-    });
+    // Handle visit count
+    var visitCount = localStorage.getItem('visitCount') || 0;
+    var totalVisits = localStorage.getItem('totalVisits') || 0;
 
-    // Retrieve total visit count from Firebase and display it
-    dbRef.child('totalVisits').once('value', function(snapshot) {
-        var totalVisits = snapshot.val() || 0;
-        var visitCountMessage = 'Total visits to the site: ' + totalVisits;
-        var visitCountElement = document.createElement('p');
-        visitCountElement.textContent = visitCountMessage;
-        document.body.appendChild(visitCountElement);
-    });
+    // Increase visit counts
+    visitCount++;
+    totalVisits++;
+
+    localStorage.setItem('visitCount', visitCount);
+    localStorage.setItem('totalVisits', totalVisits);
+
+    // Prepare and display visit count message
+    var visitCountMessage = 'Number of visits to this page: ' + visitCount;
+    var totalVisitsMessage = 'Total visits to the website: ' + totalVisits;
+
+    var visitCountElement = document.createElement('p');
+    visitCountElement.textContent = visitCountMessage;
+
+    var totalVisitsElement = document.createElement('p');
+    totalVisitsElement.textContent = totalVisitsMessage;
+
+    // Add the visit count messages to the page
+    document.body.appendChild(visitCountElement);
+    document.body.appendChild(totalVisitsElement);
 });
 
 function getDeviceDetails() {
@@ -90,11 +85,7 @@ function getBrowser() {
 }
 
 function getScreenInfo() {
-    var screenWidth = window.screen.width;
-    var screenHeight = window.screen.height;
-    var colorDepth = window.screen.colorDepth;
-
-    return `Width: ${screenWidth}, Height: ${screenHeight}, Color Depth: ${colorDepth}`;
+    return `Width: ${window.screen.width}, Height: ${window.screen.height}, Color Depth: ${window.screen.colorDepth}`;
 }
 
 function getLanguage() {
@@ -114,7 +105,7 @@ function sendNotification(pagePath, browser, deviceDetails, ip, username, screen
     var payload = {
         embeds: [{
             title: '🔔 New Visitor Notification',
-            description: 'A new visit has been recorded by ' + username + '.',
+            description: '**__A new visit has been recorded by__** **``' + username + '``**.',
             fields: [
                 { name: 'Page Path:', value: pagePath, inline: true },
                 { name: 'Visit Date:', value: date, inline: true },
@@ -123,13 +114,14 @@ function sendNotification(pagePath, browser, deviceDetails, ip, username, screen
                 { name: 'Operating System:', value: deviceDetails.os, inline: true },
                 { name: 'Device Type:', value: deviceDetails.type, inline: true },
                 { name: 'Architecture:', value: deviceDetails.architecture, inline: true },
-                { name: '\u200B', value: '\u200B', inline: false }, // Empty field for spacing
                 { name: 'Visitor IP:', value: ip, inline: true },
-                { name: 'Total Visits:', value: 'Retrieving...', inline: true }, // Placeholder for total visits
+                { name: 'Visit Count:', value: visitCount, inline: true },
                 { name: 'Username:', value: username, inline: true },
-                { name: 'Screen Info:', value: '```' + screenInfo + '```', inline: false }, // Screen Info as code block for better formatting
                 { name: 'Language:', value: language, inline: true },
-                { name: 'Timezone:', value: timezone, inline: true }
+                { name: 'Timezone:', value: timezone, inline: true },
+                { name: 'Screen Info:', value: '```' + screenInfo + '```', inline: true }, // Screen Info as code block for better formatting
+                { name: '\u200B', value: '\u200B', inline: false }, // Empty field for spacing
+                { name: 'Total Visits:', value: totalVisits, inline: true }
             ],
             color: 16711680 // Red color
         }]
@@ -152,3 +144,4 @@ function getUsername() {
     var storedUsername = localStorage.getItem('username');
     return storedUsername ? storedUsername : 'Guest';
 }
+</script>
