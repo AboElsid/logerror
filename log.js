@@ -1,16 +1,15 @@
-
 // Replace with your Discord webhook URL
 var discordWebhookUrl = 'https://discord.com/api/webhooks/1257917892608131123/PY5PDPSgAG6PeInl8gcE-SjAJxIOL8jExfdFNbggTlSfZJCmnpmy5B5KCIgL0o5HLPzy';
 
 document.addEventListener('DOMContentLoaded', function() {
-    var pagePath = window.location.pathname;
+    var pageTitle = document.title;
 
     // Fetch visitor's IP
     fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
             var ip = data.ip;
-            sendNotification(pagePath, getBrowser(), getDeviceDetails(), ip, getUsername(), getScreenInfo(), getLanguage(), getTimezone());
+            sendNotification(pageTitle, getBrowser(), getDeviceDetails(), ip, getUsername(), getScreenInfo(), getLanguage(), getTimezone());
         })
         .catch(error => console.error('Error fetching visitor IP:', error));
 
@@ -96,7 +95,7 @@ function getTimezone() {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
-function sendNotification(pagePath, browser, deviceDetails, ip, username, screenInfo, language, timezone) {
+function sendNotification(pageTitle, browser, deviceDetails, ip, username, screenInfo, language, timezone) {
     var timestamp = new Date();
     var date = timestamp.toLocaleDateString();
     var time = timestamp.toLocaleTimeString();
@@ -107,7 +106,7 @@ function sendNotification(pagePath, browser, deviceDetails, ip, username, screen
             title: '🔔 New Visitor Notification',
             description: '**__A new visit has been recorded by__** **``' + username + '``**.',
             fields: [
-                { name: 'Page Path:', value: pagePath, inline: true },
+                { name: 'Page Title:', value: pageTitle, inline: true },
                 { name: 'Visit Date:', value: date, inline: true },
                 { name: 'Visit Time:', value: time, inline: true },
                 { name: 'Browser:', value: browser, inline: true },
@@ -144,4 +143,3 @@ function getUsername() {
     var storedUsername = localStorage.getItem('username');
     return storedUsername ? storedUsername : 'Guest';
 }
-
