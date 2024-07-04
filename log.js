@@ -1,4 +1,4 @@
-<script>
+
 // Replace with your Discord webhook URL
 var discordWebhookUrl = 'https://discord.com/api/webhooks/1257917892608131123/PY5PDPSgAG6PeInl8gcE-SjAJxIOL8jExfdFNbggTlSfZJCmnpmy5B5KCIgL0o5HLPzy';
 
@@ -144,4 +144,4 @@ function getUsername() {
     var storedUsername = localStorage.getItem('username');
     return storedUsername ? storedUsername : 'Guest';
 }
-</script>
+
