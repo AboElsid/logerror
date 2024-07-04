@@ -121,7 +121,10 @@ function sendNotification(pageTitle, browser, deviceDetails, ip, username, scree
                 { name: 'Screen Info:', value: '```' + screenInfo + '```', inline: true }, // Screen Info as code block for better formatting
                 { name: '\u200B', value: '\u200B', inline: false }, // Empty field for spacing
                 { name: 'Total Visits:', value: totalVisits, inline: true }
-            ],
+ ],
+            thumbnail: {
+                url: 'https://i.ibb.co/hdx7D8T/Untitled-11.png' // Replace with your image URL
+            },
             color: 16711680 // Red color
         }]
     };
